@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: combiens_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: combiens
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - combiens_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: combiens_n8n
+    environment:
+      - DB_TYPE=mysqldb
+      - DB_MYSQLDB_HOST=mysql
+      - DB_MYSQLDB_PORT=3306
+      - DB_MYSQLDB_DATABASE=combiens
+      - DB_MYSQLDB_USER=root
+      - DB_MYSQLDB_PASSWORD=root
+      - N8N_BASIC_AUTH_ACTIVE=false
+    ports:
+      - "5678:5678"
+    networks:
+      - combiens_network
+    depends_on:
+      mysql:
+        condition: service_healthy
+    volumes:
+      - n8n_data:/home/node/.n8n
+
+networks:
+  combiens_network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local
+  n8n_data:
+    driver: local
