@@ -104,7 +104,9 @@ docker-compose logs -f mysql
 You can connect to MySQL from your host machine using any MySQL client:
 
 ```bash
-mysql -h 127.0.0.1 -P 3306 -u root -proot combiens
+# Using mysql client (will prompt for password)
+mysql -h 127.0.0.1 -P 3306 -u root -p combiens
+# Enter password when prompted: root
 ```
 
 Or use a GUI tool like MySQL Workbench, DBeaver, or phpMyAdmin with:

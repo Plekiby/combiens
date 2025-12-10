@@ -5,6 +5,7 @@ services:
     image: mysql:8.0
     container_name: combiens_mysql
     environment:
+      # WARNING: Using 'root' password for development only - use strong passwords in production
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: combiens
     ports:
@@ -30,6 +31,7 @@ services:
       - DB_MYSQLDB_DATABASE=combiens
       - DB_MYSQLDB_USER=root
       - DB_MYSQLDB_PASSWORD=root
+      # WARNING: Authentication disabled for development only - enable in production
       - N8N_BASIC_AUTH_ACTIVE=false
     ports:
       - "5678:5678"
